@@ -1,8 +1,39 @@
 # PacketNest
 
+![status: in progress](https://img.shields.io/badge/status-in%20progress-orange)
+![project: PFA](https://img.shields.io/badge/project-PFA%20cybersecurity-0f766e)
+![Django 5.1](https://img.shields.io/badge/Django-5.1-092e20)
+![Python 3.12](https://img.shields.io/badge/Python-3.12-3776ab)
+
 PacketNest is a small multi-tenant SaaS for network teams in small companies. A team uploads packet captures (PCAP / PCAPNG), gets an automatic analysis, and shares read-only reports with colleagues.
 
 Each company is an **organisation**. Every logged-in page and API call only sees the data of the user's own organisation.
+
+![Capture report](docs/screenshots/report.png)
+
+## Part of a PFA project
+
+PacketNest is the application side of my PFA (end-of-year university project) in cybersecurity. The idea in short: build a realistic web app the way a small team ships a first version, run it on AWS, watch it with a SIEM, and let a teammate attack it, then compare what the monitoring caught with what the pentest found.
+
+| Milestone | Status |
+|---|---|
+| PacketNest MVP (this repo): app, tests, Docker setup | done |
+| Deployment on AWS (EC2 + instance role, S3 for captures, Secrets Manager for the DB password) | in progress |
+| Monitoring with Wazuh (nginx, gunicorn and app logs, CloudTrail) | planned |
+| Pentest by a teammate | planned |
+| Final report: detections vs. pentest findings | planned |
+
+## Screenshots
+
+| Landing page | Captures dashboard |
+|---|---|
+| ![Landing page](docs/screenshots/home.png) | ![Dashboard](docs/screenshots/dashboard.png) |
+
+| Organisation admin | Report (full page above) |
+|---|---|
+| ![Organisation admin](docs/screenshots/organisation.png) | ![Report](docs/screenshots/report.png) |
+
+All data in the screenshots comes from `seed_demo`: fictional companies and synthetic traffic.
 
 ## Features
 
