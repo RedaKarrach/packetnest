@@ -1,0 +1,31 @@
+# secrets and local config
+.env
+.env.*
+!.env.example
+
+# python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# django
+*.sqlite3
+media/
+staticfiles/
+
+# captures (only test fixtures are allowed in git)
+*.pcap
+*.pcapng
+!app/core/tests/fixtures/*.pcap
+!app/core/tests/fixtures/*.pcapng
+
+# terraform
+.terraform/
+*.tfstate*
+
+# editors / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
