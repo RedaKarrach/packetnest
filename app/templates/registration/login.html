@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Log in{% endblock %}
+{% block content %}
+<div class="card narrow">
+  <h1>Log in</h1>
+  <p class="subtitle">Welcome back to PacketNest.</p>
+  {% if form.non_field_errors %}<div class="error-box">{{ form.non_field_errors|join:" " }}</div>{% endif %}
+  <form method="post" class="form">
+    {% csrf_token %}
+    <p>{{ form.username.label_tag }} {{ form.username }}</p>
+    <p>{{ form.password.label_tag }} {{ form.password }}</p>
+    <input type="hidden" name="next" value="{{ next }}">
+    <button type="submit" class="button">Log in</button>
+  </form>
+  <p class="muted">No account yet? <a href="{% url 'signup' %}">Sign up your company</a>.</p>
+</div>
+{% endblock %}

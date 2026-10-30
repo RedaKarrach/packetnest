@@ -1,0 +1,78 @@
+{% if capture.status == "failed" %}
+  <div class="card">
+    <h2>Analysis failed</h2>
+    <div class="error-box">{{ capture.error|default:"Unknown error" }}</div>
+  </div>
+{% elif capture.status == "done" %}
+  <div class="stats">
+    <div class="stat"><div class="value">{{ capture.summary.packet_count }}</div><div class="label">Packets{% if capture.summary.truncated %} (truncated){% endif %}</div></div>
+    <div class="stat"><div class="value">{{ capture.summary.duration_seconds }} s</div><div class="label">Duration</div></div>
+    <div class="stat"><div class="value">{{ capture.summary.total_bytes|filesizeformat }}</div><div class="label">Traffic</div></div>
+    <div class="stat"><div class="value">{{ report.findings|length }}</div><div class="label">Cleartext findings</div></div>
+  </div>
+
+  <div class="card">
+    <h2>Cleartext findings</h2>
+    {% for finding in report.findings %}
+      <div class="finding">
+        <strong>{{ finding.description }}</strong>
+        <span class="mono">{{ finding.client }} → {{ finding.server }}</span>
+        {% if finding.username %} · user <span class="mono">{{ finding.username }}</span>{% endif %}
+        {% if finding.password_seen %} · password sent (value not stored){% endif %}
+        {% if finding.host %} · host <span class="mono">{{ finding.host }}</span>{% endif %}
+        · {{ finding.packets }} packet{{ finding.packets|pluralize }}
+      </div>
+    {% empty %}
+      <div class="ok-box">No FTP logins, Telnet sessions or HTTP Basic credentials seen.</div>
+    {% endfor %}
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h2>Protocol breakdown</h2>
+      <div class="bars">
+        {% for bar in report.protocol_bars %}
+        <div class="bar-row">
+          <span class="bar-label">{{ bar.label }}</span>
+          <span class="bar-track"><span class="bar-fill{% if not bar.count %} zero{% endif %}" style="display:block; width: {{ bar.pct|stringformat:'.1f' }}%"></span></span>
+          <span class="bar-value">{{ bar.count }}</span>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="card">
+      <h2>Top source IPs</h2>
+      <div class="bars">
+        {% for bar in report.source_bars %}
+        <div class="bar-row">
+          <span class="bar-label mono">{{ bar.ip }}</span>
+          <span class="bar-track"><span class="bar-fill" style="display:block; width: {{ bar.pct|stringformat:'.1f' }}%"></span></span>
+          <span class="bar-value">{{ bar.packets }}</span>
+        </div>
+        {% empty %}<p class="muted">No IP traffic.</p>{% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Top conversations</h2>
+    <div class="bars wide">
+      {% for bar in report.conversation_bars %}
+      <div class="bar-row">
+        <span class="bar-label mono">{{ bar.a }} ↔ {{ bar.b }}</span>
+        <span class="bar-track"><span class="bar-fill" style="display:block; width: {{ bar.pct|stringformat:'.1f' }}%"></span></span>
+        <span class="bar-value">{{ bar.packets }}</span>
+      </div>
+      {% empty %}<p class="muted">No conversations.</p>{% endfor %}
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>DNS queries <span class="muted">({{ report.dns_queries|length }})</span></h2>
+    {% if report.dns_queries %}
+      <ul class="dns-list mono">{% for name in report.dns_queries %}<li>{{ name }}</li>{% endfor %}</ul>
+    {% else %}<p class="muted">No DNS queries seen.</p>{% endif %}
+  </div>
+{% else %}
+  <div class="card"><p class="muted">Analysis pending.</p></div>
+{% endif %}

@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Shared report: {{ capture.name }}{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>{{ capture.name }}</h1>
+    <p class="subtitle">Read-only report shared by {{ capture.organisation.name }} · uploaded {{ capture.created_at|date:"Y-m-d" }}</p>
+  </div>
+</div>
+{% include "core/_report.html" %}
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Upload capture{% endblock %}
+{% block content %}
+<div class="card narrow">
+  <h1>Upload a capture</h1>
+  <p class="subtitle">PCAP or PCAPNG, up to 10 MB. Analysis runs right away.</p>
+  <form method="post" enctype="multipart/form-data" class="form">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="button">Upload and analyse</button>
+  </form>
+</div>
+{% endblock %}

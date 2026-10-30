@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Captures{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>Captures</h1>
+    <p class="subtitle">{{ user.profile.organisation.name }}</p>
+  </div>
+  <div class="actions">
+    <a class="button" href="{% url 'capture_upload' %}">Upload capture</a>
+    <a class="button secondary" href="{% url 'capture_import' %}">Import from URL</a>
+  </div>
+</div>
+
+<div class="stats">
+  <div class="stat"><div class="value">{{ stats.total }}</div><div class="label">Captures</div></div>
+  <div class="stat"><div class="value">{{ stats.done }}</div><div class="label">Analysed</div></div>
+  <div class="stat"><div class="value">{{ stats.failed }}</div><div class="label">Failed</div></div>
+  <div class="stat"><div class="value">{{ stats.with_findings }}</div><div class="label">With cleartext findings</div></div>
+</div>
+
+<div class="card table-scroll">
+  {% if captures %}
+  <table>
+    <thead><tr><th>Name</th><th>Status</th><th>Packets</th><th>Size</th><th>Uploaded by</th><th>Date</th></tr></thead>
+    <tbody>
+      {% for capture in captures %}
+      <tr>
+        <td><a href="{% url 'capture_detail' capture.pk %}">{{ capture.name }}</a>{% if capture.source_url %} <span class="muted">(imported)</span>{% endif %}</td>
+        <td><span class="badge {{ capture.status }}">{{ capture.get_status_display }}</span></td>
+        <td>{{ capture.summary.packet_count|default:"–" }}</td>
+        <td>{{ capture.size_bytes|filesizeformat }}</td>
+        <td>{{ capture.uploaded_by.username|default:"(removed user)" }}</td>
+        <td>{{ capture.created_at|date:"Y-m-d H:i" }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="muted">No captures yet. <a href="{% url 'capture_upload' %}">Upload your first one</a>.</p>
+  {% endif %}
+</div>
+{% endblock %}

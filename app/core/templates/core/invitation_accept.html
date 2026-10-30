@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Join {{ invitation.organisation.name }}{% endblock %}
+{% block content %}
+<div class="card narrow">
+  <h1>Join {{ invitation.organisation.name }}</h1>
+  <p class="subtitle">You were invited as <strong>{{ invitation.get_role_display }}</strong> ({{ invitation.email }}). Choose a username and password.</p>
+  <form method="post" class="form">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="button">Create my account</button>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Organisation{% endblock %}
+{% block content %}
+<h1>{{ organisation.name }}</h1>
+<p class="subtitle">Members and invitations</p>
+
+<div class="card table-scroll">
+  <h2>Members</h2>
+  <table>
+    <thead><tr><th>Username</th><th>Email</th><th>Role</th><th>Joined</th><th></th></tr></thead>
+    <tbody>
+    {% for member in members %}
+      <tr>
+        <td>{{ member.user.username }}</td>
+        <td>{{ member.user.email }}</td>
+        <td><span class="badge role">{{ member.get_role_display }}</span></td>
+        <td>{{ member.user.date_joined|date:"Y-m-d" }}</td>
+        <td>
+          {% if member.user_id != user.id %}
+          <form method="post" action="{% url 'org_member_remove' member.user_id %}" class="inline">
+            {% csrf_token %}
+            <button type="submit" class="button small danger">Remove</button>
+          </form>
+          {% else %}<span class="muted">you</span>{% endif %}
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div class="grid">
+  <div class="card">
+    <h2>Invite a colleague</h2>
+    <form method="post" class="form">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit" class="button">Create invitation</button>
+    </form>
+    <p class="muted">PacketNest does not send email: copy the link and send it yourself.</p>
+  </div>
+  <div class="card table-scroll">
+    <h2>Pending invitations</h2>
+    {% for invitation, link in invitations %}
+      <p><strong>{{ invitation.email }}</strong> <span class="badge role">{{ invitation.get_role_display }}</span><br>
+      <span class="mono">{{ link }}</span></p>
+    {% empty %}
+      <p class="muted">No pending invitations.</p>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

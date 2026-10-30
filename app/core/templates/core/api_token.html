@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}API token{% endblock %}
+{% block content %}
+<div class="card">
+  <h1>Personal API token</h1>
+  <p class="subtitle">Use this token to call the PacketNest API as {{ user.username }}. Keep it private.</p>
+  <div class="token-box">{{ token.key }}</div>
+  <p class="muted">Created {{ token.created|date:"Y-m-d H:i" }}</p>
+  <form method="post" class="inline">
+    {% csrf_token %}
+    <button type="submit" class="button danger">Regenerate token</button>
+  </form>
+</div>
+<div class="card">
+  <h2>Examples</h2>
+  <pre class="code">curl -H "Authorization: Token {{ token.key }}" {{ request.scheme }}://{{ request.get_host }}/api/captures/
+
+curl -H "Authorization: Token {{ token.key }}" \
+     -F "file=@capture.pcap" -F "name=core-switch-span" \
+     {{ request.scheme }}://{{ request.get_host }}/api/captures/
+
+curl -H "Authorization: Token {{ token.key }}" {{ request.scheme }}://{{ request.get_host }}/api/captures/42/</pre>
+</div>
+{% endblock %}

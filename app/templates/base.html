@@ -1,0 +1,48 @@
+{% load static %}<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}PacketNest{% endblock %} · PacketNest</title>
+  <link rel="stylesheet" href="{% static 'core/style.css' %}">
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      <a class="brand" href="{% url 'home' %}"><span class="brand-mark">◆</span> PacketNest</a>
+      <nav class="nav">
+        {% if user.is_authenticated %}
+          {% if user.profile %}
+            <a href="{% url 'dashboard' %}">Captures</a>
+            <a href="{% url 'capture_upload' %}">Upload</a>
+            <a href="{% url 'capture_import' %}">Import URL</a>
+            <a href="{% url 'api_token' %}">API</a>
+            {% if user.profile.is_org_admin %}<a href="{% url 'org_members' %}">Organisation</a>{% endif %}
+          {% endif %}
+          <a href="{% url 'password_change' %}" class="muted">{{ user.username }}</a>
+          <form method="post" action="{% url 'logout' %}" class="inline">
+            {% csrf_token %}
+            <button type="submit" class="link-button">Log out</button>
+          </form>
+        {% else %}
+          <a href="{% url 'login' %}">Log in</a>
+          <a href="{% url 'signup' %}" class="button small">Sign up</a>
+        {% endif %}
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    {% if messages %}
+      <ul class="messages">
+        {% for message in messages %}<li class="message {{ message.tags }}">{{ message }}</li>{% endfor %}
+      </ul>
+    {% endif %}
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="footer wrap">
+    PacketNest · packet capture analysis for small network teams
+  </footer>
+</body>
+</html>

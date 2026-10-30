@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Import from URL{% endblock %}
+{% block content %}
+<div class="card narrow">
+  <h1>Import from a URL</h1>
+  <p class="subtitle">Paste an http(s) link to a capture file. PacketNest downloads it (max 10 MB) and analyses it like an upload.</p>
+  <form method="post" class="form">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="button">Import</button>
+  </form>
+</div>
+{% endblock %}

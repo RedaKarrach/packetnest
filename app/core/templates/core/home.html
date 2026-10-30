@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Packet capture analysis{% endblock %}
+{% block content %}
+<section class="hero">
+  <h1>Understand your network captures in seconds</h1>
+  <p>Upload a PCAP, get an automatic breakdown of protocols, top talkers, DNS lookups and cleartext credentials, then share the report with your team.</p>
+  <a class="button" href="{% url 'signup' %}">Create a company workspace</a>
+  <a class="button secondary" href="{% url 'login' %}">Log in</a>
+</section>
+<section class="features">
+  <div class="card"><h2>Upload or import</h2><p class="muted">Drop a .pcap / .pcapng file up to 10 MB, or paste a link and let PacketNest fetch it.</p></div>
+  <div class="card"><h2>Instant analysis</h2><p class="muted">Protocol mix, top sources and conversations, DNS queries and cleartext protocol findings.</p></div>
+  <div class="card"><h2>Share reports</h2><p class="muted">Create a read-only link for a single report and revoke it whenever you want.</p></div>
+  <div class="card"><h2>API access</h2><p class="muted">Automate uploads from your capture boxes with a personal API token.</p></div>
+</section>
+{% endblock %}

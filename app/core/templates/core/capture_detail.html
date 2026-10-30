@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}{{ capture.name }}{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>{{ capture.name }} <span class="badge {{ capture.status }}">{{ capture.get_status_display }}</span></h1>
+    <p class="subtitle">
+      Uploaded {{ capture.created_at|date:"Y-m-d H:i" }} by {{ capture.uploaded_by.username|default:"(removed user)" }}
+      · {{ capture.size_bytes|filesizeformat }}
+      {% if capture.source_url %}· imported from <span class="mono">{{ capture.source_url }}</span>{% endif %}
+    </p>
+    <p class="muted mono">SHA-256 {{ capture.sha256 }}</p>
+  </div>
+  <div class="actions">
+    <a class="button secondary" href="{% url 'capture_download' capture.pk %}">Download</a>
+    {% if capture.status == "done" %}
+    <form method="post" action="{% url 'share_create' capture.pk %}" class="inline">
+      {% csrf_token %}
+      <button type="submit" class="button">Share</button>
+    </form>
+    {% endif %}
+  </div>
+</div>
+
+{% if share_links %}
+<div class="card">
+  <h2>Active share links</h2>
+  <div class="table-scroll">
+  <table>
+    <thead><tr><th>Link</th><th>Created by</th><th>Created</th><th></th></tr></thead>
+    <tbody>
+    {% for link in share_links %}
+      <tr>
+        <td class="mono"><a href="{% url 'share_public' link.token %}">{{ request.scheme }}://{{ request.get_host }}{% url 'share_public' link.token %}</a></td>
+        <td>{{ link.created_by.username|default:"–" }}</td>
+        <td>{{ link.created_at|date:"Y-m-d H:i" }}</td>
+        <td>
+          {% if link.created_by_id == user.id or user.profile.is_org_admin %}
+          <form method="post" action="{% url 'share_revoke' capture.pk link.pk %}" class="inline">
+            {% csrf_token %}
+            <button type="submit" class="button small danger">Revoke</button>
+          </form>
+          {% endif %}
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+</div>
+{% endif %}
+
+{% include "core/_report.html" %}
+{% endblock %}
